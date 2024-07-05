@@ -3,6 +3,7 @@ package org.jpos.myParticipants;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.jpos.ee.DB;
 import org.jpos.models.User;
 import org.jpos.q2.Q2;
 import org.jpos.transaction.Context;
@@ -22,26 +23,43 @@ public class LoginParticipant implements TransactionParticipant {
         String password = loginRequest.get("password");
 
 
-        try{
-            Session session = (Session) ((SessionFactory) NameRegistrar.get("SessionFactory")).getCurrentSession();
-            session.getTransaction().begin();
+//        try{
+//            Session session = (Session) ((SessionFactory) NameRegistrar.get("SessionFactory")).getCurrentSession();
+//            session.getTransaction().begin();
+//
+//            User userDetails = session.createQuery("FROM User WHERE name = :username AND password = :password", User.class)
+//                    .setParameter("username", username)
+//                    .setParameter("password", password)
+//                    .uniqueResult();
+//
+//            if (userDetails == null) {
+//                // User does not exist
+//                ctx.put("response", "Invalid username or password!");
+//                return ABORTED;
+//            }
+//
+//            session.getTransaction().commit();
+//            ctx.put("response", "Signup successful");
+//
+//        }catch(NameRegistrar.NotFoundException e){
+//            ctx.put("response", "Signup failed");
+//        }
 
-            User userDetails = session.createQuery("FROM User WHERE name = :username AND password = :password", User.class)
-                    .setParameter("username", username)
-                    .setParameter("password", password)
-                    .uniqueResult();
+        try {
+            User userDetails = DB.exec((db) -> {
+                return db.session().createQuery("FROM User WHERE name = :username AND password = :password", User.class)
+                        .setParameter("username", username)
+                        .setParameter("password",password)
+                        .uniqueResult();
+            });
+            System.out.println("******************"+userDetails);
 
-            if (userDetails == null) {
-                // User does not exist
+            if(userDetails == null){
                 ctx.put("response", "Invalid username or password!");
                 return ABORTED;
             }
-
-            session.getTransaction().commit();
-            ctx.put("response", "Signup successful");
-
-        }catch(NameRegistrar.NotFoundException e){
-            ctx.put("response", "Signup failed");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
 
 

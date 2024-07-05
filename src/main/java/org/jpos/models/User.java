@@ -1,6 +1,7 @@
 package org.jpos.models;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name="Users")
@@ -20,6 +21,9 @@ public class User {
     @Column(name="name", nullable = false)
     String name;
 
+    @Column(name="balance", nullable = false)
+    private BigDecimal balance;
+
     public String getPassword() {
         return password;
     }
@@ -37,5 +41,13 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
     }
 }

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<txnmgr name="TransactionTransactionManager" class="org.jpos.transaction.TransactionManager" logger="Q2">
+    <property name="queue" value="TransactionQueue"/>
+    <property name="sessions" value="2"/>
+    <property name="max-sessions" value="128"/>
+    <property name="debug" value="true"/>
+
+    <!--    <participant class="org.jpos.rest.TestParticipant" logger="Q2"/>-->
+    <participant class="org.jpos.myParticipants.Transaction" logger="Q2"/>
+</txnmgr>
