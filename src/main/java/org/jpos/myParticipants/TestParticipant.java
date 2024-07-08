@@ -9,6 +9,7 @@ import org.jpos.util.NameRegistrar;
 import org.jpos.utils.PasswordUtil;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Map;
 
 public class TestParticipant implements TransactionParticipant {
@@ -22,6 +23,9 @@ public class TestParticipant implements TransactionParticipant {
             User newUser = new User();
             newUser.setName(signupRequest.get("username"));
             newUser.setPassword(signupRequest.get("password"));
+            newUser.setBalance(new BigDecimal(signupRequest.get("amount")) );
+
+            System.out.println("trying to signup!!!");
 
             session.save(newUser);
             session.getTransaction().commit();
